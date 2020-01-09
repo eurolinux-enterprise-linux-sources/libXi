@@ -4,8 +4,8 @@
 
 Summary: X.Org X11 libXi runtime library
 Name: libXi
-Version: 1.7.2
-Release: 2.2%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Version: 1.7.4
+Release: 1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.x.org
@@ -89,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 16 2015 Benjamin Tissoires <benjamin.tissoires@redhat.com> 1.7.4-1
+- libXi 1.7.4
+
 * Mon Jul 14 2014 Benjamin Tissoires <btissoir@redhat.com> 1.7.2-2.2
 - fix disttag
 
