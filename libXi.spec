@@ -1,29 +1,31 @@
-%define tarball libXi
-#define gitdate 20090825
+%global tarball libXi
+#global gitdate 20111222
+#global gitversion ae0187c87
 
 Summary: X.Org X11 libXi runtime library
 Name: libXi
-Version: 1.3
-Release: 3%{?dist}
+Version: 1.6.1
+Release: 3%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.x.org
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
-#Source0:    %{tarball}-%{gitdate}.tar.bz2
+%if 0%{?gitdate}
+Source0:    %{tarball}-%{gitdate}.tar.bz2
 Source1:    make-git-snapshot.sh
-
-# 615834 - libXi may corrupt other extension events
-Patch1: libXi-1.3-right-event-number.patch
+%else
+Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
+%endif
 
 BuildRequires: autoconf automake libtool
 BuildRequires: xorg-x11-util-macros
 BuildRequires: xorg-x11-proto-devel
-BuildRequires: pkgconfig(inputproto) >= 1.9.99.902
-BuildRequires: libX11-devel >= 1.2.99
+BuildRequires: pkgconfig(inputproto) >= 2.1.99.6
+BuildRequires: libX11-devel >= 1.4.99.1
 BuildRequires: libXext-devel
 BuildRequires: xmlto asciidoc >= 8.4.5
+
+Requires: libX11 >= 1.4.99.1
 
 %description
 X.Org X11 libXi runtime library
@@ -40,16 +42,14 @@ Requires: pkgconfig
 X.Org X11 libXi development package
 
 %prep
-%setup -q
-#setup -q -n %{tarball}-%{gitdate}
-%patch1 -p1 
+%setup -q -n %{tarball}-%{?gitdate:%{gitdate}}%{!?gitdate:%{version}}
 
 # Disable static library creation by default.
 %define with_static 0
 
 %build
-autoreconf -v --install || exit 1
-%configure \
+autoreconf -v --install --force || exit 1
+%configure --disable-specs \
 %if ! %{with_static}
 	--disable-static
 %endif
@@ -89,12 +89,73 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
-* Mon Jul 19 2010 Peter Hutterer <peter.hutterer@redhat.com> 1.3-3
-- libXi-1.3-right-event-number.patch: initialise extension with the 
-  number of events supported by the server. (#615834)
+* Tue Nov 06 2012 Adam Jackson <ajax@redhat.com> 1.6.1-3
+- Fix disttag
 
-* Thu Feb 04 2010 Peter Hutterer <peter.hutterer@redhat.com> 1.3-2
-- Remove BR for libXau-devel.
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu May 03 2012 Peter Hutterer <peter.hutterer@redhat.com> 1.6.1-1
+- libXi 1.6.1
+
+* Thu Mar 08 2012 Peter Hutterer <peter.hutterer@redhat.com> 1.6.0-1
+- libXi 1.6
+
+* Wed Feb 15 2012 Peter Hutterer <peter.hutterer@redhat.com> 1.5.99.3-1
+- libXi 1.5.99.3
+
+* Mon Feb 06 2012 Peter Hutterer <peter.hutterer@redhat.com> 1.5.99.2-4
+- Add requires for libX11 to avoid mismatches when updating
+
+* Fri Jan 27 2012 Peter Hutterer <peter.hutterer@redhat.com> 1.5.99.2-3
+- Bump libX11-devel requirement up to what configure actually wants
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.99.2-2.20111222gitae0187c87
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Thu Dec 22 2011 Peter Hutterer <peter.hutterer@redhat.com> 1.5.99.2-1.20111222.gitae0187c87
+- 1.5.99.2 from git
+
+* Wed Dec 21 2011 Peter Hutterer <peter.hutterer@redhat.com> 1.5.0-1
+- libXi 1.5.0
+
+* Wed Nov 09 2011 Peter Hutterer <peter.hutterer@redhat.com> 1.4.99.1-1
+- Update to 1.4.99.1 (with XI 2.1 support)
+
+* Tue Oct 11 2011 Peter Hutterer <peter.hutterer@redhat.com> 1.4.3-3
+- Fix 0001-Handle-unknown-device-classes.patch: missing prototype change for
+  copy_classes in XIQueryDevice caused parameter corruption (#744960)
+
+* Wed Aug 17 2011 Peter Hutterer <peter.hutterer@redhat.com> 1.4.3-2
+- 0001-Handle-unknown-device-classes.patch: don't corrupt memory when a
+  server sends unknown device classes.
+
+* Tue Jun 07 2011 Peter Hutterer <peter.hutterer@redhat.com> 1.4.3-1
+- libXi 1.4.3
+
+* Mon Mar 21 2011 Adam Jackson <ajax@redhat.com> 1.4.2-1
+- libXi 1.4.2
+
+* Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Wed Jan 26 2011 Peter Hutterer <peter.hutterer@redhat.com> 1.4.1-1
+- libXi 1.4.1
+
+* Wed Nov 03 2010 Peter Hutterer <peter.hutterer@redhat.com> 1.4.0-1
+- libXi 1.4
+- disable spec building, don't think they're of much of much use to our
+  users.
+
+* Wed Aug 04 2010 Peter Hutterer <peter.hutterer@redhat.com> 1.3.2-1
+- libXi 1.3.2
+  libXi 1.3.1 had a bug in the configure script.
+
+* Mon Aug 02 2010 Peter Hutterer <peter.hutterer@redhat.com> 1.3.1-1
+- libXi 1.3.1
+
+* Tue Feb 02 2010 Peter Hutterer <peter.hutterer@redhat.com> 1.3-2
+- Remove unnecessary libXau-devel BuildRequires.
 
 * Tue Oct 06 2009 Peter Hutterer <peter.hutterer@redhat.com> 1.3-1
 - libXi 1.3
