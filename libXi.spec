@@ -1,11 +1,11 @@
 %global tarball libXi
-#global gitdate 20111222
-#global gitversion ae0187c87
+#global gitdate 20130524
+%global gitversion 661c45ca1
 
 Summary: X.Org X11 libXi runtime library
 Name: libXi
-Version: 1.6.1
-Release: 3%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Version: 1.7.2
+Release: 2.2%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.x.org
@@ -20,12 +20,12 @@ Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
 BuildRequires: autoconf automake libtool
 BuildRequires: xorg-x11-util-macros
 BuildRequires: xorg-x11-proto-devel
-BuildRequires: pkgconfig(inputproto) >= 2.1.99.6
-BuildRequires: libX11-devel >= 1.4.99.1
-BuildRequires: libXext-devel
+BuildRequires: pkgconfig(inputproto) >= 2.2.99.1
+BuildRequires: libX11-devel >= 1.5.99.902
+BuildRequires: libXext-devel libXfixes-devel
 BuildRequires: xmlto asciidoc >= 8.4.5
 
-Requires: libX11 >= 1.4.99.1
+Requires: libX11 >= 1.5.99.902
 
 %description
 X.Org X11 libXi runtime library
@@ -48,7 +48,7 @@ X.Org X11 libXi development package
 %define with_static 0
 
 %build
-autoreconf -v --install --force || exit 1
+autoreconf -f -v --install || exit 1
 %configure --disable-specs \
 %if ! %{with_static}
 	--disable-static
@@ -89,8 +89,48 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
-* Tue Nov 06 2012 Adam Jackson <ajax@redhat.com> 1.6.1-3
-- Fix disttag
+* Mon Jul 14 2014 Benjamin Tissoires <btissoir@redhat.com> 1.7.2-2.2
+- fix disttag
+
+* Wed Feb 12 2014 Adam Jackson <ajax@redhat.com> 1.7.2-2.1git}
+- Mass rebuild
+
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 1.7.2-2
+- Mass rebuild 2013-12-27
+
+* Wed Jul 03 2013 Peter Hutterer <peter.hutterer@redhat.com> 1.7.2-1
+- libXi 1.7.2
+
+* Thu Jun 27 2013 Peter Hutterer <peter.hutterer@redhat.com> 1.7.1.901-1
+- libXi 1.7.1.901
+
+* Mon May 27 2013 Peter Hutterer <peter.hutterer@redhat.com> - 1.7.1-5.20130524git661c45ca1
+- Require libX11 1.6RC2 for _XEatDataWords
+
+* Fri May 24 2013 Peter Hutterer <peter.hutterer@redhat.com> 1.7.1-4.20130524git661c45ca1
+- Udpate to git snapshot to fix CVEs listed below
+- CVE-2013-1984
+- CVE-2013-1995
+- CVE-2013-1998
+
+* Tue May 21 2013 Peter Hutterer <peter.hutterer@redhat.com> 1.7.1-3
+- fix sequence number copy - the cookie already had (a potentially
+  different) sequence number copied (#965347)
+
+* Fri May 17 2013 Peter Hutterer <peter.hutterer@redhat.com> 1.7.1-2
+- copy the sequence number into XI2 events
+
+* Fri Apr 05 2013 Peter Hutterer <peter.hutterer@redhat.com> 1.7.1-1
+- libXi 1.7.1
+
+* Thu Mar 07 2013 Peter Hutterer <peter.hutterer@redhat.com> 1.7-1
+- libXi 1.7
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.99.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Jan 08 2013 Adam Jackson <ajax@redhat.com> 1.6.99.1-1
+- libXi 1.6.99.1
 
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
