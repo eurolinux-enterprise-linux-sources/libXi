@@ -81,7 +81,7 @@ XGetDeviceMotionEvents(
 
     LockDisplay(dpy);
     if (_XiCheckExtInit(dpy, XInput_Initial_Release, info) == -1)
-	return ((XDeviceTimeCoord *) NoSuchExtension);
+        return NULL;
 
     GetReq(GetDeviceMotionEvents, req);
     req->reqType = info->codes->major_opcode;
@@ -114,7 +114,8 @@ XGetDeviceMotionEvents(
     }
     /* rep.axes is a CARD8, so assume max number of axes for bounds check */
     if (rep.nEvents <
-	(INT_MAX / (sizeof(XDeviceTimeCoord) + (UCHAR_MAX * sizeof(int))))) {
+	(INT_MAX / (sizeof(XDeviceTimeCoord) + (UCHAR_MAX * sizeof(int)))) &&
+	rep.nEvents * (rep.axes + 1) <= rep.length) {
 	size_t bsize = rep.nEvents *
 	    (sizeof(XDeviceTimeCoord) + (rep.axes * sizeof(int)));
 	bufp = Xmalloc(bsize);

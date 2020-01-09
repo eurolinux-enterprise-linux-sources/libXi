@@ -4,7 +4,7 @@
 
 Summary: X.Org X11 libXi runtime library
 Name: libXi
-Version: 1.7.4
+Version: 1.7.8
 Release: 1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 License: MIT
 Group: System Environment/Libraries
@@ -89,6 +89,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Jan 19 2017 Benjamin Tissoires <benjamin.tissoires@redhat.com> 1.7.8-1
+- libXi 1.7.8
+- fixes CVE-2016-7945, CVE-2016-7946 (#1406221)
+
 * Mon Nov 16 2015 Benjamin Tissoires <benjamin.tissoires@redhat.com> 1.7.4-1
 - libXi 1.7.4
 
