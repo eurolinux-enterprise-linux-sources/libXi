@@ -1,3 +1,280 @@
+commit b87c312590877800b4e18a17a012b47839f5c06b
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Jan 23 13:44:58 2017 +1000
+
+    libXi 1.7.9
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 557b60798a9da49386f1034b133838332735de22
+Author: Emilio Pozuelo Monfort <pochu@debian.org>
+Date:   Tue Dec 27 17:24:10 2016 +0100
+
+    Fix possible free of uninitialized pointer
+    
+    If the _XReply() call fails, we'll try to free an uninitialized
+    pointer.
+    
+    https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=849026
+    
+    Reported-by: Thomas Walker <thwalker3@gmail.com>
+    Signed-off-by: Emilio Pozuelo Monfort <pochu@debian.org>
+    Reviewed-by: Julien Cristau <jcristau@debian.org>
+    Tested-by: Thomas Walker <thwalker3@gmail.com>
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+
+commit 4c5c8d6246debc06a56120cff71bfdf1877884d0
+Author: Emilio Pozuelo Monfort <pochu@debian.org>
+Date:   Tue Oct 25 21:31:19 2016 +0200
+
+    Check that allocating a buffer succeeded
+    
+    Since we are going to write into the buffer, we should make sure the
+    allocation didn't fail.
+    
+    Reported-by: Julien Cristau <jcristau@debian.org>
+    Signed-off-by: Emilio Pozuelo Monfort <pochu@debian.org>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 7ac03c6c1907a39b5b42b17ad331295b8c85154d
+Author: Emilio Pozuelo Monfort <pochu@debian.org>
+Date:   Tue Oct 25 21:31:18 2016 +0200
+
+    Plug a memory leak
+    
+    Introduced in commit 19a9cd6.
+    
+    Reported-by: Julien Cristau <jcristau@debian.org>
+    Signed-off-by: Emilio Pozuelo Monfort <pochu@debian.org>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 1bdeb431c3cc9eec7e12fdd29a83237f2f228865
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Oct 25 12:43:44 2016 +1000
+
+    libXi 1.7.8
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 43904c9c5a0f5750a03a9bd8c96ccda182eb5a9a
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Oct 13 13:33:11 2016 +1000
+
+    XListInputDevices: don't touch ndevices in case of error
+    
+    We used to always set *ndevices to the number of devices returned by the
+    server. This magically worked because we pretty much never returned an error
+    except on faulty server or library implementations. With 19a9cd60 we now have
+    more chances of getting an error, so the polite thing is to just leave *ndevices
+    alone when we error out.
+    
+    Document it as such in the man page, just in case someone accidentally reads
+    it.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    CC: Niels Ole Salscheider <niels_ole@salscheider-online.de>
+    Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+
+commit b843fe1c0a6b4dbaae9f364042c6a247249305ef
+Author: Niels Ole Salscheider <niels_ole@salscheider-online.de>
+Date:   Fri Oct 7 21:46:44 2016 +0200
+
+    SizeClassInfo can return 0 even without an error
+    
+    Catch the error case separately. Commit 19a9cd607d added length checking to
+    SizeClassInfo but re-used the return value of 0 for an error. A device without
+    classes (as is initialized by xf86-input-libinput for tablets) can
+    legitimately return 0 and erroneously triggers an error.
+    Fix this by using a separate value for the error.
+    
+    Reproducible by calling XListInputDevices() with a tablet attached.
+    
+    This fixes a regression introduced in commit 19a9cd607d.
+    
+    Signed-off-by: Niels Ole Salscheider <niels_ole@salscheider-online.de>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
+
+commit 8e0476653dd134cee84f4e893f656b2f93c4e3b0
+Author: Matthieu Herrb <matthieu.herrb@laas.fr>
+Date:   Tue Oct 4 21:14:01 2016 +0200
+
+    libXi 1.7.7
+    
+    Signed-off-by: Matthieu Herrb <matthieu.herrb@laas.fr>
+
+commit 19a9cd607de73947fcfb104682f203ffe4e1f4e5
+Author: Tobias Stoeckmann <tobias@stoeckmann.org>
+Date:   Sun Sep 25 22:31:34 2016 +0200
+
+    Properly validate server responses.
+    
+    By validating length fields from server responses, out of boundary
+    accesses and endless loops can be mitigated.
+    
+    Signed-off-by: Tobias Stoeckmann <tobias@stoeckmann.org>
+    Reviewed-by: Matthieu Herrb <matthieu@herrb.eu>
+
+commit 2286282f965064176b3b1492646c6e2e0f4ab7dd
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Tue Dec 22 11:20:01 2015 +1000
+
+    libXi 1.7.6
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 13f25bfb55f4a0bc1f614cbf9b0b13a50ecad8a0
+Author: Javier Pello <javier.pello@urjc.es>
+Date:   Wed Oct 7 12:41:01 2015 +0200
+
+    Fix const compiler warnings
+    
+    When invoking Data, Data16 and Data32 from XChangeDeviceProperty,
+    we must cast the data pointer to the right type, but we do not need
+    to cast constness away. This change allows to enable -Wcast-qual on
+    the build and have it complete without warnings.
+    
+    Signed-off-by: Javier Pello <javier.pello@urjc.es>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 380861589690bcbe8b04b7a2c23b5dd5d10c4bf8
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Mon Oct 19 11:46:41 2015 +1000
+
+    Don't use raw serial numbers in XIEvents
+    
+    cookie->serial is an Xlib contoction, provided by _XSetLastRequestRead(). This
+    serial may be different to the raw serial number from the wire protocol.
+    This causes issues when the raw serial is used to e.g. compare the event to
+    other non-XI events.
+    
+    Use the cookie's serial number instead.
+    
+    https://bugzilla.gnome.org/show_bug.cgi?id=756649
+    
+    See also https://bugs.freedesktop.org/show_bug.cgi?id=64687
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit f180dff710dc54d00e0e26b84de053151f8f207e
+Author: Peter Hutterer <peter.hutterer@who-t.net>
+Date:   Thu Sep 10 01:16:19 2015 +1000
+
+    libXi 1.7.5
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 05c86e53c0bae30e58b32b94e191c8720990918a
+Author: Cosimo Cecchi <cosimoc@gnome.org>
+Date:   Tue Feb 24 07:49:34 2015 +1000
+
+    Fix version check in _XIAllowEvents
+    
+    Commit 5810d0797160a97012664ffe719a59e1b288a525 changed _XIAllowEvents() to
+    use _XiCheckVersion() instead of _XiCheckExtInit() to avoid a double display
+    unlock, but it failed to correctly check for the version, since we should set
+    have_XI22 to True for every version greater or equal to 2.2.
+    
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit c648441036cf5ffc5225cd484e2c906d374f0a4b
+Author: Michal Srb <msrb@suse.com>
+Date:   Mon Nov 3 12:43:40 2014 +0200
+
+    XIGrabDevice: Unlock display in error path.
+    
+    Signed-off-by: Michal Srb <msrb@suse.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 29c77457ad86966ae2204b865fb8b437269063c4
+Author: Michal Srb <msrb@suse.com>
+Date:   Sat Nov 1 20:00:57 2014 +0200
+
+    Refactor XGetExtensionVersion.
+    
+    _XiGetExtensionVersion was called from XGetExtensionVersion and from
+    _XiCheckExtInit. When called from _XiCheckExtInit, nothing accounted for the
+    fact that it can return ((XExtensionVersion *) NoSuchExtension) in case of
+    error. Also it recursively calls _XiCheckExtInit potentionally causing multiple
+    unlocks if _XiCheckExtInit fails.
+    -> Remove it and call directly _XiGetExtensionVersionRequest and only call
+    _XiCheckExtInit only from XGetExtensionVersion.
+    
+    Signed-off-by: Michal Srb <msrb@suse.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 5810d0797160a97012664ffe719a59e1b288a525
+Author: Michal Srb <msrb@suse.com>
+Date:   Sat Nov 1 20:00:56 2014 +0200
+
+    Fix logic in _XIAllowEvents and prevent double unlock.
+    
+    Replacing the second _XiCheckExtInit with _XiCheckVersion prevents possible
+    double unlock as _XiCheckExtInit actually unlocks the display when it returns
+    -1.
+    
+    Signed-off-by: Michal Srb <msrb@suse.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit f699770e7c92da1dbf16892fde83438f0b79c979
+Author: Michal Srb <msrb@suse.com>
+Date:   Sat Nov 1 20:00:54 2014 +0200
+
+    XIGetClientPointer: Return False on error.
+    
+    Not NoSuchExtension which is 1 = True!
+    
+    Signed-off-by: Michal Srb <msrb@suse.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit dc1f8c6ec1ba8135afa185c8e8360c1ed90bf96c
+Author: Michal Srb <msrb@suse.com>
+Date:   Sat Nov 1 20:00:53 2014 +0200
+
+    Do not return NoSuchExtension casted to pointer as an error.
+    
+    Several functions were returning NoSuchExtension casted to a pointer in case of
+    an error. Often in parallel with returning NULL in case of another error. It is
+    undocumented and certainly wrong.
+    
+    Signed-off-by: Michal Srb <msrb@suse.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 83261c52a17543437882e2863b7f06a92c9039f8
+Author: Michal Srb <msrb@suse.com>
+Date:   Sat Nov 1 20:00:52 2014 +0200
+
+    XIChangeHierarchy: Add missing unlock.
+    
+    When num_changes <= 0 or Xmalloc fails, the display has to be unlocked.
+    
+    Signed-off-by: Michal Srb <msrb@suse.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 22ae8d4f26e92b17e1ce8239a38481933d6f1ca7
+Author: Michal Srb <msrb@suse.com>
+Date:   Sat Nov 1 20:00:51 2014 +0200
+
+    Fix double unlock when _XiCheckExtInit return -1.
+    
+    _XiCheckExtInit unlocks the display if it fails and returns -1. Most callers
+    account for it properly, but few didn't.
+    
+    Signed-off-by: Michal Srb <msrb@suse.com>
+    Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+
+commit 71a42145b678be623e30bd5bf55833a04f14376f
+Author: Julien Cristau <jcristau@debian.org>
+Date:   Mon Oct 27 19:00:36 2014 +0100
+
+    Advance the request buffer by the right amount in XIChangeHierarchy
+    
+    c->length is in 4-byte units, dptr is a char *, so we need to advance
+    dptr by 4 * length to get the position of the next HierarchyChangeInfo.
+    
+    Reviewed-by: Peter Hutterer <peter.hutterer@who-t.net>
+    Signed-off-by: Julien Cristau <jcristau@debian.org>
+
 commit 8c255b30f3a4ed8bf67e6bb76df47cbd480735f8
 Author: Peter Hutterer <peter.hutterer@who-t.net>
 Date:   Fri Jul 18 16:45:51 2014 +1000
@@ -811,7 +1088,7 @@ Date:   Wed Dec 21 15:40:37 2011 +1000
     Merge branch 'multitouch'
     
     Conflicts:
-    	configure.ac
+            configure.ac
 
 commit 82a631263ef4e6f46c1f33748089db8bf603b095
 Author: Peter Hutterer <peter.hutterer@who-t.net>
@@ -1016,7 +1293,7 @@ Date:   Sat Sep 17 06:41:30 2011 +1000
     Merge branch 'smooth-scrolling'
     
     Conflicts:
-    	src/XExtInt.c
+            src/XExtInt.c
 
 commit 3ed1b463205295a5ebba7d570a4cb8dfade51a38
 Author: Peter Hutterer <peter.hutterer@who-t.net>
@@ -2832,7 +3109,7 @@ Date:   Thu Jun 4 15:49:07 2009 +1000
     Merge branch 'master' into xi2
     
     Conflicts:
-    	man/XI.xml
+            man/XI.xml
 
 commit 8ea9ebcedcb99480a5774c7755329a2ca8fda07b
 Author: Benjamin Close <Benjamin.Close@clearchain.com>
@@ -3670,16 +3947,16 @@ Date:   Fri Feb 29 18:14:00 2008 -0300
     
     src/XExtInt.c:xinput_extension_hooks field event_to_wire of type
       XExtensionHooks that has the prototype     Status (*event_to_wire)(
-    	      Display*			/* display */,
-                  XEvent*			/* re */,
-                  xEvent*			/* event */
+                  Display*                  /* display */,
+                  XEvent*                   /* re */,
+                  xEvent*                   /* event */
       );
       does not match Status
       _XiEventToWire(
-        register Display	 *dpy,		/* pointer to display structure */
-        register XEvent	 *re,		/* pointer to client event */
-        register xEvent	**event,	/* wire protocol event */
-        register int	 *count);
+        register Display     *dpy,          /* pointer to display structure */
+        register XEvent      *re,           /* pointer to client event */
+        register xEvent     **event,        /* wire protocol event */
+        register int         *count);
     
     Signed-off-by: Peter Hutterer <peter@cs.unisa.edu.au>
 
@@ -3698,9 +3975,9 @@ Date:   Mon Apr 28 14:35:11 2008 +0930
     
     Conflicts:
     
-    	.gitignore
-    	man/XGrabDeviceKey.man
-    	man/XListInputDevices.man
+            .gitignore
+            man/XGrabDeviceKey.man
+            man/XListInputDevices.man
 
 commit 7d0977bc02ce4f29c0ed335fcdcce4ed7c328259
 Author: Peter Hutterer <peter@cs.unisa.edu.au>

@@ -73,13 +73,14 @@ XGetFeedbackControl(
     XFeedbackState *Sav = NULL;
     xFeedbackState *f = NULL;
     xFeedbackState *sav = NULL;
+    char *end = NULL;
     xGetFeedbackControlReq *req;
     xGetFeedbackControlReply rep;
     XExtDisplayInfo *info = XInput_find_display(dpy);
 
     LockDisplay(dpy);
     if (_XiCheckExtInit(dpy, XInput_Initial_Release, info) == -1)
-	return ((XFeedbackState *) NoSuchExtension);
+        return NULL;
 
     GetReq(GetFeedbackControl, req);
     req->reqType = info->codes->major_opcode;
@@ -105,10 +106,12 @@ XGetFeedbackControl(
 	    goto out;
 	}
 	sav = f;
+	end = (char *)f + nbytes;
 	_XRead(dpy, (char *)f, nbytes);
 
 	for (i = 0; i < *num_feedbacks; i++) {
-	    if (f->length > nbytes)
+	    if ((char *)f + sizeof(*f) > end ||
+	        f->length == 0 || f->length > nbytes)
 		goto out;
 	    nbytes -= f->length;
 
@@ -125,6 +128,8 @@ XGetFeedbackControl(
 	    case StringFeedbackClass:
 	    {
 		xStringFeedbackState *strf = (xStringFeedbackState *) f;
+		if ((char *)f + sizeof(*strf) > end)
+		    goto out;
 		size += sizeof(XStringFeedbackState) +
 		    (strf->num_syms_supported * sizeof(KeySym));
 	    }

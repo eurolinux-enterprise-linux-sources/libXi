@@ -4,8 +4,8 @@
 
 Summary: X.Org X11 libXi runtime library
 Name: libXi
-Version: 1.7.4
-Release: 2%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Version: 1.7.9
+Release: 1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.x.org
@@ -48,7 +48,7 @@ X.Org X11 libXi development package
 %define with_static 0
 
 %build
-autoreconf -v --install || exit 1
+autoreconf -v -f --install || exit 1
 %configure --disable-specs \
 %if ! %{with_static}
 	--disable-static
@@ -89,6 +89,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Jan 23 2017 Peter Hutterer <peter.hutterer@redhat.com> 1.7.9-1
+- libXi 1.7.9
+
+* Mon Jan 23 2017 Benjamin Tissoires <benjamin.tissoires@redhat.com> 1.7.8-1
+- libXi 1.7.8
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
