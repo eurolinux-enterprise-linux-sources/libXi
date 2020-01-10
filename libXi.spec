@@ -5,7 +5,7 @@
 Summary: X.Org X11 libXi runtime library
 Name: libXi
 Version: 1.7.2
-Release: 2.1%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Release: 1%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.x.org
@@ -89,12 +89,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
-* Wed Feb 12 2014 Adam Jackson <ajax@redhat.com> 1.7.2-2.1git}
-- Mass rebuild
-
-* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 1.7.2-2
-- Mass rebuild 2013-12-27
-
 * Wed Jul 03 2013 Peter Hutterer <peter.hutterer@redhat.com> 1.7.2-1
 - libXi 1.7.2
 
